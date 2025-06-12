@@ -1,0 +1,76 @@
+/* Simple PDF file for CV download */
+.cv-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  background-color: #fff;
+}
+
+.cv-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.cv-header h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.cv-header h2 {
+  font-size: 18px;
+  font-weight: normal;
+  color: #666;
+}
+
+.cv-section {
+  margin-bottom: 25px;
+}
+
+.cv-section h3 {
+  font-size: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+}
+
+.cv-item {
+  margin-bottom: 15px;
+}
+
+.cv-item h4 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.cv-item .date {
+  font-style: italic;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.cv-item p {
+  margin-bottom: 5px;
+}
+
+.cv-skills {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.cv-skills span {
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  margin: 0 5px 5px 0;
+  border-radius: 3px;
+}
+
+.cv-contact {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.cv-contact p {
+  margin: 5px 0;
+}
