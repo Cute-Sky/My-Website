@@ -1,6 +1,13 @@
 // Menu toggle functionality
 let menuIcon = document.querySelector("#menu-icon");
 let navbar = document.querySelector(".navbar");
+let darkmodeIcon = document.querySelector('#darkmode-icon');
+
+// Dark/Light Mode
+darkmodeIcon.onclick = () => {
+  darkmodeIcon.classList.toggle('bx-sun');
+  document.body.classList.toggle('light-mode');
+};
 
 menuIcon.onclick = () => {
   menuIcon.classList.toggle("bx-x");
@@ -32,6 +39,12 @@ window.onscroll = () => {
   let header = document.querySelector("header");
   header.classList.toggle("sticky", window.scrollY > 100);
 
+  // Back to top button visibility (Wait, I need to select it first, but it's simpler to just query it here or globally)
+  let footerIconTop = document.querySelector('.footer-iconTop');
+  if (footerIconTop) {
+    footerIconTop.classList.toggle('show-back-to-top', window.scrollY > 100);
+  }
+
   // Remove toggle icon and navbar when clicking navbar link (for mobile)
   menuIcon.classList.remove("bx-x");
   navbar.classList.remove("active");
@@ -44,10 +57,10 @@ ScrollReveal({
   delay: 200
 });
 
-ScrollReveal().reveal('.home-content, .heading', { origin:'top' });
-ScrollReveal().reveal('.home-img, .services-container, .portfolio-box, .contact form, .testimonial-box, .skills-box', { origin:'bottom' });
-ScrollReveal().reveal('.home-content h1, .about-img', { origin:'left' });
-ScrollReveal().reveal('.home-content p, .about-content', { origin:'right' });
+ScrollReveal().reveal('.home-content, .heading', { origin: 'top' });
+ScrollReveal().reveal('.home-img, .services-container, .portfolio-box, .contact form, .testimonial-box, .skills-box', { origin: 'bottom' });
+ScrollReveal().reveal('.home-content h1, .about-img', { origin: 'left' });
+ScrollReveal().reveal('.home-content p, .about-content', { origin: 'right' });
 
 // Typed.js for text animation
 const typed = new Typed('.multiple-text', {
@@ -59,24 +72,24 @@ const typed = new Typed('.multiple-text', {
 });
 
 // Portfolio filtering functionality
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const filterBtns = document.querySelectorAll('.filter-btn');
   const portfolioItems = document.querySelectorAll('.portfolio-box');
-  
+
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       // Update active button
       filterBtns.forEach(btn => btn.classList.remove('active'));
       btn.classList.add('active');
-      
+
       // Filter portfolio items
       const filterValue = btn.getAttribute('data-filter');
-      
+
       portfolioItems.forEach(item => {
         if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
-          item.style.display = 'block';
+          item.classList.remove('hidden');
         } else {
-          item.style.display = 'none';
+          item.classList.add('hidden');
         }
       });
     });
@@ -84,26 +97,26 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Form validation and submission
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const contactForm = document.getElementById('contact-form');
   const formStatus = document.getElementById('form-status');
-  
+
   if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
+    contactForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      
+
       // Basic form validation
       const fullname = document.getElementById('fullname').value;
       const email = document.getElementById('email').value;
       const subject = document.getElementById('subject').value;
       const message = document.getElementById('message').value;
-      
+
       if (!fullname || !email || !subject || !message) {
         formStatus.textContent = 'Please fill in all required fields.';
         formStatus.className = 'form-status error';
         return;
       }
-      
+
       // Email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
@@ -111,66 +124,54 @@ document.addEventListener('DOMContentLoaded', function() {
         formStatus.className = 'form-status error';
         return;
       }
-      
-      // Simulate form submission (in a real implementation, this would be an AJAX call)
+
+      // Form submission via Formspree
       formStatus.textContent = 'Sending message...';
       formStatus.className = 'form-status';
-      
-      setTimeout(() => {
-        formStatus.textContent = 'Message sent successfully! I will get back to you soon.';
-        formStatus.className = 'form-status success';
-        contactForm.reset();
-      }, 1500);
+
+      fetch(contactForm.action, {
+        method: contactForm.method,
+        body: new FormData(contactForm),
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(response => {
+        if (response.ok) {
+          formStatus.textContent = 'Message sent successfully! I will get back to you soon.';
+          formStatus.className = 'form-status success';
+          contactForm.reset();
+        } else {
+          response.json().then(data => {
+            console.error('Formspree Error:', data); // Log detailed error
+            if (Object.hasOwn(data, 'errors')) {
+              formStatus.textContent = data["errors"].map(error => error["message"]).join(", ");
+            } else {
+              formStatus.textContent = 'Oops! There was a problem submitting your form';
+            }
+            formStatus.className = 'form-status error';
+          });
+        }
+      }).catch(error => {
+        console.error('Fetch Error:', error); // Log network error
+        formStatus.textContent = 'Oops! There was a problem submitting your form. Check console for details.';
+        formStatus.className = 'form-status error';
+      });
     });
   }
 });
 
 // Lazy loading for images
-document.addEventListener('DOMContentLoaded', function() {
-  // Check if browser supports Intersection Observer
-  if ('IntersectionObserver' in window) {
-    const imgOptions = {
-      threshold: 0.1,
-      rootMargin: "0px 0px 200px 0px"
-    };
-    
-    const imgObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          const src = img.getAttribute('data-src');
-          
-          if (src) {
-            img.src = src;
-            img.removeAttribute('data-src');
-          }
-          
-          imgObserver.unobserve(img);
-        }
-      });
-    }, imgOptions);
-    
-    // Get all images with data-src attribute
-    const lazyImages = document.querySelectorAll('img[data-src]');
-    lazyImages.forEach(img => imgObserver.observe(img));
-  } else {
-    // Fallback for browsers that don't support Intersection Observer
-    const lazyImages = document.querySelectorAll('img[data-src]');
-    lazyImages.forEach(img => {
-      img.src = img.getAttribute('data-src');
-      img.removeAttribute('data-src');
-    });
-  }
-});
+// Lazy loading for images
+// Native loading="lazy" is now used in HTML, so this script is redundant and removed.
 
 // Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
+  anchor.addEventListener('click', function (e) {
     e.preventDefault();
-    
+
     const targetId = this.getAttribute('href');
     const targetElement = document.querySelector(targetId);
-    
+
     if (targetElement) {
       window.scrollTo({
         top: targetElement.offsetTop - 100,

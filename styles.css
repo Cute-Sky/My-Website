@@ -20,6 +20,12 @@
   --main-color: #0ef;
 }
 
+.light-mode {
+  --bg-color: #fdfdfd;
+  --second-bg-color: #f0f0f0;
+  --text-color: #333;
+}
+
 html {
   font-size: 62.5%;
   overflow-x: hidden;
@@ -47,6 +53,10 @@ section {
   border-width: 0;
 }
 
+.hidden {
+  display: none !important;
+}
+
 /* Navigation bar section*/
 
 .header {
@@ -72,7 +82,15 @@ section {
   font-size: 2.5rem;
   color: var(--text-color);
   font-weight: 600;
-  cursor: default;
+  cursor: pointer;
+}
+
+
+
+#darkmode-icon {
+  font-size: 2.4rem;
+  color: var(--text-color);
+  cursor: pointer;
 }
 
 .navbar a {
@@ -100,6 +118,7 @@ section {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 5rem;
 }
 
 .home-img img {
@@ -111,10 +130,12 @@ section {
 }
 
 @keyframes floatImage {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-2.4rem);
   }
@@ -191,7 +212,7 @@ span {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: 5rem;
   background: var(--second-bg-color);
 }
 
@@ -718,6 +739,21 @@ span {
   color: var(--second-bg-color);
 }
 
+.footer-iconTop {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.5s ease;
+  z-index: 99;
+}
+
+.footer-iconTop.show-back-to-top {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* Breakpoints */
 
 @media (max-width: 1200px) {
@@ -778,7 +814,7 @@ span {
     font-size: 2rem;
     margin: 3rem 0;
   }
-  
+
   .home {
     flex-direction: column;
   }
@@ -816,11 +852,11 @@ span {
   .portfolio-container {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .testimonial-container {
     flex-direction: column;
   }
-  
+
   .footer-content {
     flex-direction: column;
   }
@@ -830,13 +866,18 @@ span {
   .portfolio-container {
     grid-template-columns: 1fr;
   }
-  
+
   .portfolio-filter {
-    flex-direction: column;
+    flex-wrap: wrap;
+    /* Allow wrapping */
+    justify-content: center;
   }
-  
+
   .filter-btn {
-    margin: 0.3rem;
+    margin: 0.5rem;
+    /* More spacing */
+    flex: 1 1 40%;
+    /* Grow to fill space */
   }
 }
 
@@ -848,27 +889,18 @@ span {
   .contact form .input-box input {
     width: 100%;
   }
-  
-  .skills-container {
-    flex-direction: column;
-  }
-}
 
-@media (max-width: 365px) {
-  .home-img img {
-    width: 90vw;
-  }
-
+  /* Ensure images don't overflow */
+  .home-img img,
   .about-img img {
     width: 90vw;
+    height: auto;
   }
 
+  /* Stack footer items nicely */
   .footer {
     flex-direction: column-reverse;
-  }
-
-  .footer p {
     text-align: center;
-    margin-top: 2rem;
+    gap: 2rem;
   }
 }
